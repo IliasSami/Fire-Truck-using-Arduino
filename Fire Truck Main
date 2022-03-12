@@ -1,0 +1,110 @@
+#include <Servo.h>
+Servo myservo;
+const int Right_Forward = 4;
+const int Right_Backward = 5;
+const int Left_Forward = 7;
+const int Left_Backward = 6;
+const int SensorRight = 10;
+const int SensorCenter = 9;
+const int SensorLeft = 8;
+const int pump = 2;
+int Motor_A_Speed = 3;
+int Motor_B_Speed = 11;
+
+void setup() {
+  myservo.attach(12);
+  pinMode(Right_Forward, OUTPUT);
+  pinMode(Right_Backward, OUTPUT);
+  pinMode(Left_Forward, OUTPUT);
+  pinMode(Left_Backward, OUTPUT);
+  pinMode(SensorRight, INPUT);
+  pinMode(SensorCenter, INPUT);
+  pinMode(SensorLeft, INPUT);
+  pinMode(Motor_A_Speed, OUTPUT);
+  pinMode(Motor_B_Speed, OUTPUT);
+  pinMode(pump, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(pump, LOW);
+  int pos;
+  myservo.write(60);
+  if (digitalRead(SensorRight) == LOW) {
+    delay(100);
+    digitalWrite(pump, HIGH);
+    delay(1000);
+    analogWrite(Motor_A_Speed, 110);
+    analogWrite(Motor_B_Speed, 110);
+    digitalWrite(Left_Forward, HIGH);
+    digitalWrite(Right_Forward, HIGH);
+    for (pos = 20; pos <= 50; pos += 1) {
+      // in steps of 1 degree
+      myservo.write(pos);
+      delay(20);
+    }
+    for (pos = 50; pos >= 20; pos -= 1) {
+      myservo.write(pos);
+      delay(20);
+    }
+
+  } else(digitalRead(SensorRight) == HIGH); {
+    Stop();
+    digitalWrite(pump, LOW);
+  }
+
+  if (digitalRead(SensorCenter) == LOW) {
+    delay(100);
+    digitalWrite(pump, HIGH);
+    delay(1000);
+    analogWrite(Motor_A_Speed, 110);
+    analogWrite(Motor_B_Speed, 110);
+    digitalWrite(Left_Forward, HIGH);
+    digitalWrite(Right_Forward, HIGH);
+    for (pos = 50; pos <= 110; pos += 1) {
+      // in steps of 1 degree
+      myservo.write(pos);
+      delay(20);
+    }
+    for (pos = 110; pos >= 50; pos -= 1) {
+      myservo.write(pos);
+      delay(20);
+    }
+
+  } else(digitalRead(SensorCenter) == HIGH); {
+    Stop();
+    digitalWrite(pump, LOW);
+  }
+
+  if (digitalRead(SensorLeft) == LOW) {
+    delay(100);
+    digitalWrite(pump, HIGH);
+    delay(1000);
+    analogWrite(Motor_A_Speed, 110);
+    analogWrite(Motor_B_Speed, 110);
+    digitalWrite(Left_Forward, HIGH);
+    digitalWrite(Right_Forward, HIGH);
+    for (pos = 90; pos <= 160; pos += 1) {
+      // in steps of 1 degree
+      myservo.write(pos);
+      delay(20);
+    }
+    for (pos = 160; pos >= 90; pos -= 1) {
+      myservo.write(pos);
+      delay(20);
+    }
+
+  } else(digitalRead(SensorLeft) == HIGH); {
+    digitalWrite(pump, LOW);
+    Stop();
+  }
+
+}
+
+void Stop()
+{
+  digitalWrite(Left_Forward, LOW);
+  digitalWrite(Left_Backward, LOW);
+  digitalWrite(Right_Forward, LOW);
+  digitalWrite(Right_Backward, LOW);
+}
